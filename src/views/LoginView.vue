@@ -66,7 +66,7 @@ const submitForm = () => {
   <div class="container mt-5">
     <div class="row">
       <div class="col-md-8 offset-md-2">
-        <h1 class="text-center">🗄️ W5. Library Login Form</h1>
+        <h1 class="text-center">Charity Health Platform</h1>
         <p class="text-center">Let's join us.</p>
         <form @submit.prevent="submitForm">
           <div class="row mb-3">

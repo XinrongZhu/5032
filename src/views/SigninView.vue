@@ -8,9 +8,9 @@ const formData = ref({
   password: '',
   confirmPassword: '',
   isAustralian: false,
-  reason: '',
-  gender: '',
-  suburb: 'Clayton'
+  email: '',
+  phone: '',
+  gender: ''
 })
 
 const submittedCards = ref([])
@@ -19,9 +19,16 @@ const submitForm = () => {
   validateName(true)
   validatePassword(true)
   validateConfirmPassword(true)
-  validateReason(true)
+  validateEmail(true)
+  validatePhone(true)
+
+  if (!formData.value.username || !formData.value.password || !formData.value.confirmPassword || !formData.value.email || !formData.value.phone) {
+    alert("Please fill in all required fields.");
+    return; 
+  }
+
   if (!errors.value.username && !errors.value.password && !errors.value.confirmPassword
-    && !errors.value.reason) {
+    && !errors.value.email && !errors.value.phone) {
     submittedCards.value.push({ ...formData.value })
     clearForm()
   }
@@ -32,7 +39,8 @@ const clearForm = () => {
     username: '',
     password: '',
     isAustralian: false,
-    reason: '',
+    email: '',
+    phone: '',
     gender: ''
   }
 }
@@ -42,8 +50,9 @@ const errors = ref({
   password: null,
   confirmPassword: null,
   resident: null,
-  gender: null,
-  reason: null
+  email: null,
+  phone: null,
+  gender: null
 })
 
 const validateName = (blur) => {
@@ -89,32 +98,34 @@ const validateConfirmPassword = (blur) => {
   }
 }
 
-const validateReason = (blur) => {
-  if (formData.value.reason.length <10) {
-    if (blur) errors.value.reason = 'Reason must be at least 10 characters.'
+const validateEmail = (blur) => {
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailPattern.test(formData.value.email)) {
+    if (blur) errors.value.email = 'Please enter a valid email address.';
   } else {
-    errors.value.reason = null
+    errors.value.email = null;
   }
-}
+};
 
-const validateFriend = (blur) => {
-  if (formData.value.reason.includes('friend')) {
-    if (blur) hasFriend.value = true;
+const validatePhone = (blur) => {
+  const phonePattern = /^(\+61|0)[4-5]\d{8}$/;
+  if (!phonePattern.test(formData.value.phone)) {
+    if (blur) errors.value.phone = 'Please enter a valid Australian phone number.';
   } else {
-    hasFriend.value = false
+    errors.value.phone = null;
   }
-}
-const hasFriend = ref(false)
+};
+
 </script>
 
 <template>
-  <!-- 🗄️ W3. Library Registration Form -->
+  <!-- Registration Form -->
   <div class="container mt-5">
     <div class="row">
       <div class="col-md-8 offset-md-2">
-        <h1 class="text-center">🗄️ W5. Library Registration Form</h1>
+        <h1 class="text-center">Registration Form</h1>
         <p class="text-center">
-          Let's build some more advanced features into our form.
+          Let's join us!
         </p>
         <form @submit.prevent="submitForm">
           <div class="row mb-3">
@@ -162,9 +173,33 @@ const hasFriend = ref(false)
                 v-model="formData.confirmPassword"
                 @blur="() => validateConfirmPassword(true)"
               />
-              <div v-if="errors.confirmPassword" class="text-danger">
-                {{ errors.confirmPassword }}
-              </div>
+              <div v-if="errors.confirmPassword" class="text-danger">{{ errors.confirmPassword }}</div>
+            </div>
+
+            <div class="col-md-6 col-sm-6">
+              <label for="email" class="form-label">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                @blur="() => validateEmail(true)"
+                @input="() => validateEmail(false)"
+                v-model="formData.email"
+              />
+              <div v-if="errors.email" class="text-danger">{{ errors.email }}</div>
+            </div>
+
+            <div class="col-md-6 col-sm-6">
+              <label for="phone" class="form-label">Phone</label>
+              <input
+                type="tel"
+                class="form-control"
+                id="phone"
+                @blur="() => validatePhone(true)"
+                @input="() => validatePhone(false)"
+                v-model="formData.phone"
+              />
+              <div v-if="errors.phone" class="text-danger">{{ errors.phone }}</div>
             </div>
           </div>
 
@@ -181,27 +216,7 @@ const hasFriend = ref(false)
               </div>
             </div>
           </div>
-          <div class="mb-3">
-            <label for="reason" class="form-label">Reason for joining</label>
-            <textarea
-              class="form-control"
-              id="reason"
-              rows="3"
-              v-model="formData.reason"
-              @blur="() => validateReason(true)"
-              @input="() => {validateReason(false); validateFriend(true)}"
-            ></textarea>
-            <div v-if="errors.reason" class="text-danger">
-                {{ errors.reason }}
-            </div>
-            <div v-if="hasFriend" style="color: green;">
-                Great to have a friend.
-            </div>
-          </div>
-          <div class="mb-3">
-            <label for="suburb" class="form-label">Suburb</label>
-            <input type="text" class="form-control" id="suburb" v-bind:value="formData.suburb" />
-          </div>
+
           <div class="text-center">
             <button type="submit" class="btn btn-primary me-2">Submit</button>
             <button type="button" class="btn btn-secondary" @click="clearForm">Clear</button>
@@ -218,7 +233,8 @@ const hasFriend = ref(false)
       <Column field="password" header="Password"></Column>
       <Column field="isAustralian" header="Australian Resident"></Column>
       <Column field="gender" header="Gender"></Column>
-      <Column field="reason" header="Reason"></Column>
+      <Column field="email" header="Email"></Column>
+      <Column field="phone" header="Phone"></Column>
     </DataTable>
   </div>
 
@@ -238,7 +254,8 @@ const hasFriend = ref(false)
             Australian Resident: {{ card.isAustralian ? 'Yes' : 'No' }}
           </li>
           <li class="list-group-item">Gender: {{ card.gender }}</li>
-          <li class="list-group-item">Reason: {{ card.reason }}</li>
+          <li class="list-group-item">Email: {{ card.reason }}</li>
+          <li class="list-group-item">Phone: {{ card.reason }}</li>
         </ul>
       </div>
     </div>
