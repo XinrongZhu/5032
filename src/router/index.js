@@ -3,12 +3,18 @@ import SigninView from '../views/SigninView.vue'
 import AboutView from '../views/AboutView.vue'
 import LoginView from '../views/LoginView.vue'
 import { useAuth } from '../router/authenticated'
+import RatingView from '../views/RatingView.vue'
 
 const { isAuthenticated } = useAuth()
 
 const routes = [
   {
     path: '/',
+    name: 'Login',
+    component: LoginView, 
+  },
+  {
+    path: '/signin',
     name: 'Signin',
     component: SigninView,
   },
@@ -18,9 +24,9 @@ const routes = [
     component: AboutView,
   },
   {
-    path: '/login',
-    name: 'Login',
-    component: LoginView,
+    path: '/rating',
+    name: 'Rating',
+    component: RatingView,
   },
 ];
 

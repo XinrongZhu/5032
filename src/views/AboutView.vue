@@ -99,7 +99,7 @@
   text-align: left;
   font-size: 1.2rem;
   color: #333;
-  margin-top: 20px;
+  margin-top: 20px; 
 }
 
 .footer-section p {

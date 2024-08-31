@@ -99,10 +99,23 @@ const submitForm = () => {
             <button type="submit" class="btn btn-primary me-2">Submit</button>
           </div>
         </form>
+
+        <p class="text-center mt-3">
+            Don't have an account? 
+            <router-link to="/signin">Sign up here</router-link>.
+        </p>
+
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+.text-center {
+  text-align: center;
+}
+
+.mt-3 {
+  margin-top: 1rem;
+}
 </style>

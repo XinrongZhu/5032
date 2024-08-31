@@ -18,14 +18,17 @@ const logout = () => {
       <ul class="nav nav-pills">
         <li class="nav-item">
           <router-link to="/" class="nav-link" active-class="active" aria-current="page"
-            >Signin</router-link
+            >Login</router-link
           >
+        </li>
+        <li class="nav-item">
+          <router-link to="/signin" class="nav-link" active-class="active">Signin</router-link>
         </li>
         <li class="nav-item">
           <router-link to="/about" class="nav-link" active-class="active">About</router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/login" class="nav-link" active-class="active">Login</router-link>
+          <router-link to="/rating" class="nav-link" active-class="active">Rating</router-link>
         </li>
         <li class="nav-item">
           <button class="nav-link" active-class="active" @click="logout">Logout</button>
