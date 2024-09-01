@@ -53,6 +53,27 @@ const validateForm = () => {
   } else {
     errors.value.username = null
   }
+  
+  const password = formData.value.password
+  const minLength = 8
+  const hasUppercase = /[A-Z]/.test(password)
+  const hasLowercase = /[a-z]/.test(password)
+  const hasNumber = /\d/.test(password)
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password)
+  
+  if (password.length < minLength) {
+    errors.value.password = `Password must be at least ${minLength} characters long.`
+  } else if (!hasUppercase) {
+    errors.value.password = 'Password must contain at least one uppercase letter.'
+  } else if (!hasLowercase) {
+    errors.value.password = 'Password must contain at least one lowercase letter.'
+  } else if (!hasNumber) {
+    errors.value.password = 'Password must contain at least one number.'
+  } else if (!hasSpecialChar) {
+    errors.value.password = 'Password must contain at least one special character.'
+  } else {
+    errors.value.password = null
+  }
 
   if (formData.value.password !== formData.value.confirmPassword) {
     errors.value.confirmPassword = 'Passwords do not match.'
@@ -90,6 +111,7 @@ const clearForm = () => {
   formData.value = {
     username: '',
     password: '',
+    confirmPassword: '',
     isAustralian: false,
     email: '',
     phone: '',
