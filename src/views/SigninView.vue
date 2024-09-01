@@ -1,8 +1,14 @@
 <script setup>
+/**
+ * This component allows users to sign up an account.
+ * It includes validation, required filled fields, client-side validation and sanitization and displays submitted data in a table.
+ */
 import { ref } from 'vue'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
+import DOMPurify from 'dompurify'
 
+// form data to store user input
 const formData = ref({
   username: '',
   password: '',
@@ -13,38 +19,7 @@ const formData = ref({
   gender: ''
 })
 
-const submittedCards = ref([])
-
-const submitForm = () => {
-  validateName(true)
-  validatePassword(true)
-  validateConfirmPassword(true)
-  validateEmail(true)
-  validatePhone(true)
-
-  if (!formData.value.username || !formData.value.password || !formData.value.confirmPassword || !formData.value.email || !formData.value.phone) {
-    alert("Please fill in all required fields.");
-    return; 
-  }
-
-  if (!errors.value.username && !errors.value.password && !errors.value.confirmPassword
-    && !errors.value.email && !errors.value.phone) {
-    submittedCards.value.push({ ...formData.value })
-    clearForm()
-  }
-}
-
-const clearForm = () => {
-  formData.value = {
-    username: '',
-    password: '',
-    isAustralian: false,
-    email: '',
-    phone: '',
-    gender: ''
-  }
-}
-
+// store validation errors
 const errors = ref({
   username: null,
   password: null,
@@ -55,67 +30,72 @@ const errors = ref({
   gender: null
 })
 
-const validateName = (blur) => {
+// Sanitize input using DOMPurify
+const sanitizeInput = (input) => {
+  return DOMPurify.sanitize(input)
+}
+
+// store submitted form data
+const submittedCards = ref([])
+
+// validate form input
+const validateForm = () => {
+  // sanitize input
+  formData.value.username = sanitizeInput(formData.value.username)
+  formData.value.password = sanitizeInput(formData.value.password)
+  formData.value.confirmPassword = sanitizeInput(formData.value.confirmPassword)
+  formData.value.email = sanitizeInput(formData.value.email)
+  formData.value.phone = sanitizeInput(formData.value.phone)
+
+  // validate all content
   if (formData.value.username.length < 3) {
-    if (blur) errors.value.username = 'Name must be at least 3 characters'
+    errors.value.username = 'Username must be at least 3 characters long.'
   } else {
     errors.value.username = null
   }
-}
 
-const validatePassword = (blur) => {
-  const password = formData.value.password
-  const minLength = 8
-  const hasUppercase = /[A-Z]/.test(password)
-  const hasLowercase = /[a-z]/.test(password)
-  const hasNumber = /\d/.test(password)
-  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password)
-
-  if (password.length < minLength) {
-    if (blur) errors.value.password = `Password must be at least ${minLength} characters long.`
-  } else if (!hasUppercase) {
-    if (blur) errors.value.password = 'Password must contain at least one uppercase letter.'
-  } else if (!hasLowercase) {
-    if (blur) errors.value.password = 'Password must contain at least one lowercase letter.'
-  } else if (!hasNumber) {
-    if (blur) errors.value.password = 'Password must contain at least one number.'
-  } else if (!hasSpecialChar) {
-    if (blur) errors.value.password = 'Password must contain at least one special character.'
-  } else {
-    errors.value.password = null
-  }
-}
-
-/**
- * Confirm password validation function that checks if the password and confirm password fields match.
- * @param blur: boolean - If true, the function will display an error message if the passwords do not match.
- */
-const validateConfirmPassword = (blur) => {
   if (formData.value.password !== formData.value.confirmPassword) {
-    if (blur) errors.value.confirmPassword = 'Passwords do not match.'
+    errors.value.confirmPassword = 'Passwords do not match.'
   } else {
     errors.value.confirmPassword = null
   }
+
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!emailPattern.test(formData.value.email)) {
+    errors.value.email = 'Please enter a valid email address.'
+  } else {
+    errors.value.email = null
+  }
+
+  const phonePattern = /^(\+61|0)[4-5]\d{8}$/
+  if (!phonePattern.test(formData.value.phone)) {
+    errors.value.phone = 'Please enter a valid Australian phone number.'
+  } else {
+    errors.value.phone = null
+  }
 }
 
-const validateEmail = (blur) => {
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailPattern.test(formData.value.email)) {
-    if (blur) errors.value.email = 'Please enter a valid email address.';
-  } else {
-    errors.value.email = null;
+// Submit form
+const submitForm = () => {
+  validateForm()
+  if (!errors.value.username && !errors.value.password && !errors.value.confirmPassword && !errors.value.email && !errors.value.phone) {
+    submittedCards.value.push({ ...formData.value })
+    clearForm()
+    alert('Form submitted successfully!')
   }
-};
+}
 
-const validatePhone = (blur) => {
-  const phonePattern = /^(\+61|0)[4-5]\d{8}$/;
-  if (!phonePattern.test(formData.value.phone)) {
-    if (blur) errors.value.phone = 'Please enter a valid Australian phone number.';
-  } else {
-    errors.value.phone = null;
+// clear the form
+const clearForm = () => {
+  formData.value = {
+    username: '',
+    password: '',
+    isAustralian: false,
+    email: '',
+    phone: '',
+    gender: ''
   }
-};
-
+}
 </script>
 
 <template>
@@ -129,6 +109,7 @@ const validatePhone = (blur) => {
         </p>
         <form @submit.prevent="submitForm">
           <div class="row mb-3">
+            <!-- Username-->
             <div class="col-md-6 col-sm-6">
               <label for="username" class="form-label">Username</label>
               <input
@@ -142,6 +123,7 @@ const validatePhone = (blur) => {
               <div v-if="errors.username" class="text-danger">{{ errors.username }}</div>
             </div>
 
+            <!-- Gender -->
             <div class="col-md-6 col-sm-6">
               <label for="gender" class="form-label">Gender</label>
               <select class="form-select" id="gender" v-model="formData.gender" required>
@@ -151,6 +133,7 @@ const validatePhone = (blur) => {
               </select>
             </div>
 
+            <!-- Password-->
             <div class="col-md-6 col-sm-6">
               <label for="password" class="form-label">Password</label>
               <input
@@ -164,6 +147,7 @@ const validatePhone = (blur) => {
               <div v-if="errors.password" class="text-danger">{{ errors.password }}</div>
             </div>
 
+            <!-- Confirm Password-->
             <div class="col-md-6 col-sm-6">
               <label for="confirm-password" class="form-label">Confirm password</label>
               <input
@@ -176,6 +160,7 @@ const validatePhone = (blur) => {
               <div v-if="errors.confirmPassword" class="text-danger">{{ errors.confirmPassword }}</div>
             </div>
 
+            <!-- Email-->
             <div class="col-md-6 col-sm-6">
               <label for="email" class="form-label">Email</label>
               <input
@@ -189,6 +174,7 @@ const validatePhone = (blur) => {
               <div v-if="errors.email" class="text-danger">{{ errors.email }}</div>
             </div>
 
+            <!-- Phone -->
             <div class="col-md-6 col-sm-6">
               <label for="phone" class="form-label">Phone</label>
               <input
@@ -203,6 +189,7 @@ const validatePhone = (blur) => {
             </div>
           </div>
 
+          <!-- Australian Resident-->
           <div class="row mb-3">
             <div class="col-md-6 col-sm-6">
               <div class="form-check">
@@ -216,7 +203,8 @@ const validatePhone = (blur) => {
               </div>
             </div>
           </div>
-
+          
+          <!-- Submit and Clear Buttons -->
           <div class="text-center">
             <button type="submit" class="btn btn-primary me-2">Submit</button>
             <button type="button" class="btn btn-secondary" @click="clearForm">Clear</button>
@@ -226,6 +214,7 @@ const validatePhone = (blur) => {
     </div>
   </div>
 
+  <!-- Display submitted user information -->
   <div class="row mt-5">
     <h4>This is a Primevue Datatable.</h4>
     <DataTable :value="submittedCards" tableStyle="min-width: 50rem">
@@ -236,29 +225,6 @@ const validatePhone = (blur) => {
       <Column field="email" header="Email"></Column>
       <Column field="phone" header="Phone"></Column>
     </DataTable>
-  </div>
-
-  <div class="row mt-5" v-if="submittedCards.length">
-    <div class="d-flex flex-wrap justify-content-start">
-      <div
-        v-for="(card, index) in submittedCards"
-        :key="index"
-        class="card m-2"
-        style="width: 18rem"
-      >
-        <div class="card-header">User Information</div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">Username: {{ card.username }}</li>
-          <li class="list-group-item">Password: {{ card.password }}</li>
-          <li class="list-group-item">
-            Australian Resident: {{ card.isAustralian ? 'Yes' : 'No' }}
-          </li>
-          <li class="list-group-item">Gender: {{ card.gender }}</li>
-          <li class="list-group-item">Email: {{ card.reason }}</li>
-          <li class="list-group-item">Phone: {{ card.reason }}</li>
-        </ul>
-      </div>
-    </div>
   </div>
 </template>
 

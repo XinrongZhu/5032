@@ -4,7 +4,7 @@
     <p>Please rate your experience with our service:</p>
 
     <div class="rating-form">
-      <!-- Star Rating and Reason Component -->
+      <!-- Star rating component -->
       <div class="stars">
         <span
           v-for="star in 5"
@@ -16,6 +16,7 @@
         </span>
       </div>
       
+      <!-- Reason-->
       <div class="reason-container mt-3">
         <label for="reason" class="form-label">Reason</label>
         <textarea
@@ -29,11 +30,19 @@
         <div v-if="errors.reason" class="text-danger">{{ errors.reason }}</div>
       </div>
       
-      <button class="btn btn-primary mt-3" :disabled="!canSubmit" @click="submitRating">
-        Submit Rating
+      <!-- Submit button -->
+      <button 
+        class="btn btn-primary mt-3" 
+        :disabled="!canSubmit || !isAuthenticated" 
+        @click="submitRating"
+      >
+        Submit
       </button>
+      <p v-if="!isAuthenticated" class="text-danger mt-2">You must be logged in to submit a rating.</p>
+      
     </div>
 
+    <!-- Average Rating and Reviews -->
     <div v-if="averageRating !== 0" class="average-rating mt-5">
       <h2>Current Average Rating: {{ averageRating.toFixed(1) }} / 5</h2>
       <p>Based on {{ reviews.length }} reviews</p>
@@ -52,18 +61,32 @@
 </template>
 
 <script setup>
+/*
+ * 
+ * This component enables users to rate a service and provide a reason for their rating.
+ * It dynamically updates the star rating, validates the reason, and stores the data locally.
+ * 
+ */
+
 import { ref, computed } from 'vue'
 
+// Initialize reactive state for the current rating and reason (comment)
 const rating = ref(0)
 const reason = ref('')
+// Error state for validation of the reason field
 const errors = ref({ reason: null })
 
-const reviews = ref([
-  { rating: 4, comment: 'Great service, very satisfied!' },
+// Simulated dynamic data source: array of past reviews
+const initialReviews = [
+  { rating: 4, comment: 'Great website, very satisfied!' },
   { rating: 5, comment: 'Amazing experience!' },
   { rating: 3, comment: 'It was okay, could be better.' },
-])
+]
 
+// Reactive state for storing all reviews
+const reviews = ref([...initialReviews])
+
+// validate reason form data
 const validateReason = (blur) => {
   if (reason.value.length < 10) {
     if (blur) errors.value.reason = 'Reason must be at least 10 characters.'
@@ -72,12 +95,14 @@ const validateReason = (blur) => {
   }
 }
 
+// set the current user rating
 const setRating = (value) => {
   rating.value = value
 }
 
+// submit the current rating and reason as a new review
 const submitRating = () => {
-  if (rating.value && reason.value.length >= 10) {
+  if (rating.value && reason.value.length >= 10 && isAuthenticated.value) {
     reviews.value.push({ rating: rating.value, comment: reason.value })
     rating.value = 0
     reason.value = ''
@@ -85,10 +110,12 @@ const submitRating = () => {
   }
 }
 
+// check submit permission
 const canSubmit = computed(() => {
   return rating.value > 0 && reason.value.length >= 10
 })
 
+// calculate average rating
 const averageRating = computed(() => {
   if (reviews.value.length === 0) return 0
   const total = reviews.value.reduce((sum, review) => sum + review.rating, 0)
@@ -97,46 +124,55 @@ const averageRating = computed(() => {
 </script>
 
 <style scoped>
+/* Container for the rating view */
 .rating-container {
   text-align: center;
   margin-top: 50px;
   padding: 0 20px; /* Add padding to avoid edges */
 }
 
+/* Container for the rating form */
 .rating-form {
   max-width: 600px;
   margin: 0 auto;
 }
 
+/* Styling for the stars in the rating component */
 .stars {
   font-size: 2rem;
   cursor: pointer;
 }
 
+/* Filled star styling */
 .star-filled {
   color: gold;
 }
 
+/* Empty star styling */
 .star-empty {
   color: lightgray;
 }
 
+/* Container for the reason textarea */
 .reason-container {
   margin-top: 20px;
   text-align: left;
 }
 
+/* Paragraph text styling */
 p {
   font-size: 1.2rem;
   color: #333;
 }
 
+/* Styling for the average rating display */
 .average-rating {
   margin-top: 30px;
   font-size: 1.5rem;
   color: #333;
 }
 
+/* Container for the user reviews section */
 .reviews-section {
   margin-top: 40px;
   text-align: left;
@@ -144,6 +180,7 @@ p {
   padding: 0 40px; 
 }
 
+/* Individual review card styling */
 .review-card {
   background-color: #f9f9f9;
   padding: 15px;

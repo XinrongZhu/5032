@@ -1,14 +1,22 @@
 <script setup>
+/*
+ * 
+ * This component enables users to login and click link to signin page.
+ * 
+ */
 import { ref } from 'vue'
 import router from '../router/index'
 import { useRoute } from 'vue-router'
 import { useAuth } from '../router/authenticated'
 
+// Hardcoded credentials for user login
 const savedUserName = 'mike'
 const savedPassword = 'Qq@123456789'
 
+// authentication methods
 const { isAuthenticated, login} = useAuth()
 
+// reactive form data and error
 const formData = ref({
   username: '',
   password: '',
@@ -19,6 +27,7 @@ const errors = ref({
   password: null
 })
 
+// validate user name
 const validateName = (blur) => {
   if (formData.value.username.length < 3) {
     if (blur) errors.value.username = 'Name must be at least 3 characters'
@@ -27,6 +36,7 @@ const validateName = (blur) => {
   }
 }
 
+// validate user password
 const validatePassword = (blur) => {
   const password = formData.value.password
   const minLength = 8
@@ -50,6 +60,7 @@ const validatePassword = (blur) => {
   }
 }
 
+// submit form and authenticate user
 const submitForm = () => {
   validateName(true)
   validatePassword(true)
@@ -67,9 +78,11 @@ const submitForm = () => {
     <div class="row">
       <div class="col-md-8 offset-md-2">
         <h1 class="text-center">Charity Health Platform</h1>
-        <p class="text-center">Let's join us.</p>
+        <p class="text-center">Let's join us!</p>
         <form @submit.prevent="submitForm">
           <div class="row mb-3">
+
+            <!-- Username-->
             <div class="col-md-6 col-sm-6">
               <label for="username" class="form-label">Username</label>
               <input
@@ -82,6 +95,8 @@ const submitForm = () => {
               />
               <div v-if="errors.username" class="text-danger">{{ errors.username }}</div>
             </div>
+
+            <!-- Password-->
             <div class="col-md-6 col-sm-6">
               <label for="password" class="form-label">Password</label>
               <input
@@ -100,6 +115,7 @@ const submitForm = () => {
           </div>
         </form>
 
+        <!-- Link to Sign-up -->
         <p class="text-center mt-3">
             Don't have an account? 
             <router-link to="/signin">Sign up here</router-link>.
@@ -115,7 +131,9 @@ const submitForm = () => {
   text-align: center;
 }
 
+/* Adjust margin */
 .mt-3 {
   margin-top: 1rem;
 }
+
 </style>

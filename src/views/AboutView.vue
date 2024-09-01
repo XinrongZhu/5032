@@ -6,7 +6,7 @@
     </div>
 
     <div class="content-section">
-      <div class="text-section">
+      <div class="col-md-6 col-sm-6 text-section mb-3">
         <h2>In this section</h2>
         <ul>
           <li> Lastest health resources</li>
@@ -17,7 +17,7 @@
         </ul>
       </div>
 
-      <div class="image-section">
+      <div class="col-md-6 col-sm-6 image-section mb-3">
         <img src="@/assets/ass2.png" alt="Charity Health Platform" />
       </div>
     </div>

@@ -2,8 +2,10 @@
 import {useAuth} from '../router/authenticated'
 import router from '../router'
 
+// get the authentication state
 const {isAuthenticated} = useAuth()
 
+// Logout to set authentication state to false and redirect to the login page
 const logout = () => {
   isAuthenticated.value = false
   router.push({name: 'Login'})
@@ -11,7 +13,7 @@ const logout = () => {
 </script>
 
 <template>
-  <!-- Using Bootstrap's Header template (starter code) -->
+  <!-- Navigation Header -->
   <!-- https://getbootstrap.com/docs/5.0/examples/headers/ -->
   <div class="container">
     <header class="d-flex justify-content-center py-3">
