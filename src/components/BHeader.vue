@@ -36,6 +36,9 @@ const logout = async () => {
           <router-link to="/rating" class="nav-link" active-class="active">Rating</router-link>
         </li>
         <li class="nav-item">
+          <router-link to="/email" class="nav-link" active-class="active">Email</router-link>
+        </li>
+        <li class="nav-item">
           <button class="nav-link" active-class="active" @click="logout">Logout</button>
         </li>
       </ul>

@@ -8,7 +8,6 @@ import { useRouter } from 'vue-router'
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 import { getFirestore, doc, setDoc } from 'firebase/firestore'
 import DOMPurify from 'dompurify'
-import db from '../firebase/init';
 
 // Firebase instances
 const auth = getAuth()

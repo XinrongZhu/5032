@@ -8,7 +8,6 @@ import { ref } from 'vue'
 import router from '../router/index'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import { getFirestore, doc, getDoc } from 'firebase/firestore'
-import db from '../firebase/init';
 
 // Firebase instances
 const auth = getAuth()

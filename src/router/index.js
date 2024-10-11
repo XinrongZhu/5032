@@ -4,6 +4,7 @@ import AboutView from '../views/AboutView.vue'
 import LoginView from '../views/LoginView.vue'
 import RatingView from '../views/RatingView.vue'
 import Admindashboard from '../views/Admindashboard.vue'
+import EmailView from '../views/EmailView.vue'
 import { getAuth } from 'firebase/auth';
 
 // Define application routes
@@ -33,6 +34,12 @@ const routes = [
     name: 'Rating',
     component: RatingView,
   },
+  ,
+  {
+    path: '/email',
+    name: 'Email',
+    component: EmailView,
+  }
 ];
 
 // Create a new Vue Router instance with history mode and defined routes

@@ -26,11 +26,56 @@
       <p><strong>Our mission is to create a comprehensive platform that supports older adults and their caregivers.</strong></p>
       <p>This platform provides essential tools and resources, improving access to reliable health information and enabling effective communication with healthcare providers. By addressing the unique challenges faced by older adults, we aim to make a positive impact on their quality of life.</p>
     </div>
+
+    <div class="export-buttons">
+      <button @click="exportToPDF" class="btn btn-primary">Export to PDF</button>
+      <button @click="exportToCSV" class="btn btn-secondary">Export to CSV</button>
+    </div>
+
   </div>
 </template>
 
 <script setup>
-// No script required for this layout
+import { jsPDF } from 'jspdf';
+
+const exportToPDF = () => {
+  const doc = new jsPDF();
+
+  doc.text('Welcome to Our Charity Health Platform', 10, 10);
+  doc.text('This platform is dedicated to promoting the health and well-being of older adults...', 10, 20);
+  doc.text('In this section:', 10, 30);
+  doc.text('- Latest health resources', 10, 40);
+  doc.text('- Community activities and support', 10, 50);
+  doc.text('- Healthcare center search | VIC and TAS', 10, 60);
+  doc.text('- A phone call each day to check you\'re OK', 10, 70);
+  doc.text('- Volunteer services with local community', 10, 80);
+  
+  doc.save('about.pdf');
+};
+
+const exportToCSV = () => {
+  const csvContent = `
+    Section,Details
+    Welcome,Welcome to Our Charity Health Platform
+    Introduction,This platform is dedicated to promoting the health and well-being of older adults...
+    Sections,Latest health resources
+    Sections,Community activities and support
+    Sections,Healthcare center search | VIC and TAS
+    Sections,A phone call each day to check you're OK
+    Sections,Volunteer services with local community
+  `;
+
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  link.setAttribute('href', url);
+  link.setAttribute('download', 'about.csv');
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
 </script>
 
 <style scoped>
@@ -110,4 +155,22 @@
 .footer-section p strong {
   font-weight: bold;
 }
+
+.export-buttons .btn {
+  margin: 5px 10px; 
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: #007bff; 
+  color: white;
+}
+
+.btn-secondary {
+  background-color: #007bff; 
+  color: white;
+}
+
 </style>
