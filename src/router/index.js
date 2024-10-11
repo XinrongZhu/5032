@@ -1,12 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import SigninView from '../views/SigninView.vue'
+import RegisterView from '../views/RegisterView.vue'
 import AboutView from '../views/AboutView.vue'
 import LoginView from '../views/LoginView.vue'
-import { useAuth } from '../router/authenticated'
 import RatingView from '../views/RatingView.vue'
-
-// Destructure the `isAuthenticated` variable from `useAuth` for authentication checks
-const { isAuthenticated } = useAuth()
+import Admindashboard from '../views/Admindashboard.vue'
+import { getAuth } from 'firebase/auth';
 
 // Define application routes
 const routes = [
@@ -16,9 +14,14 @@ const routes = [
     component: LoginView, 
   },
   {
-    path: '/signin',
-    name: 'Signin',
-    component: SigninView,
+    path: '/register',
+    name: 'Register',
+    component: RegisterView,
+  },
+  {
+    path: '/admindashboard',
+    name: 'Admindashboard',
+    component: Admindashboard,
   },
   {
     path: '/about',
@@ -41,7 +44,10 @@ const router = createRouter({
 // Navigation guard for route protection
 // If the user is not authenticated, they will be redirected to the Login page when trying to access the About page
 router.beforeEach((to, from, next) => {
-  if (to.name === 'About' && !isAuthenticated.value) {
+  const auth = getAuth(); 
+  const user = auth.currentUser;
+
+  if (to.name === 'About' && !user) {
     alert("You need to log in to access this page.");
     next({ name: 'Login' });
   } else {
@@ -49,4 +55,4 @@ router.beforeEach((to, from, next) => {
   }
 });
 
-export default router
+export default router;

@@ -1,20 +1,20 @@
-<script setup>
-import {useAuth} from '../router/authenticated'
-import router from '../router'
+import { getAuth, signOut } from 'firebase/auth';
+import { useRouter } from 'vue-router';
 
-// get the authentication state
-const {isAuthenticated} = useAuth()
+const auth = getAuth();
+const router = useRouter();
 
-// Logout to set authentication state to false and redirect to the login page
-const logout = () => {
-  isAuthenticated.value = false
-  router.push({name: 'Login'})
-}
-</script>
+const logout = async () => {
+  try {
+    await signOut(auth);
+    router.push('/');
+  } catch (error) {
+    console.error('Error signing out:', error);
+  }
+};
 
 <template>
   <!-- Navigation Header -->
-  <!-- https://getbootstrap.com/docs/5.0/examples/headers/ -->
   <div class="container">
     <header class="d-flex justify-content-center py-3">
       <ul class="nav nav-pills">
@@ -24,7 +24,10 @@ const logout = () => {
           >
         </li>
         <li class="nav-item">
-          <router-link to="/signin" class="nav-link" active-class="active">Signin</router-link>
+          <router-link to="/register" class="nav-link" active-class="active">Register</router-link>
+        </li>
+         <li class="nav-item">
+          <router-link to="/admindashboard" class="nav-link" active-class="active">Admindashboard</router-link>
         </li>
         <li class="nav-item">
           <router-link to="/about" class="nav-link" active-class="active">About</router-link>

@@ -4,28 +4,33 @@
  * It includes validation, required filled fields, client-side validation and sanitization and displays submitted data in a table.
  */
 import { ref } from 'vue'
-import DataTable from 'primevue/datatable'
-import Column from 'primevue/column'
+import { useRouter } from 'vue-router'
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
+import { getFirestore, doc, setDoc } from 'firebase/firestore'
 import DOMPurify from 'dompurify'
+import db from '../firebase/init';
+
+// Firebase instances
+const auth = getAuth()
+const db = getFirestore()
 
 // form data to store user input
 const formData = ref({
+  email: '',
   username: '',
   password: '',
   confirmPassword: '',
   isAustralian: false,
-  email: '',
   phone: '',
   gender: ''
 })
 
 // store validation errors
 const errors = ref({
+  email: null,
   username: null,
   password: null,
   confirmPassword: null,
-  resident: null,
-  email: null,
   phone: null,
   gender: null
 })
@@ -33,6 +38,60 @@ const errors = ref({
 // Sanitize input using DOMPurify
 const sanitizeInput = (input) => {
   return DOMPurify.sanitize(input)
+}
+
+const router = useRouter()
+
+// Submit form and register user
+const submitForm = async () => {
+  validateForm()
+
+  if (!errors.value.username && !errors.value.password && !errors.value.confirmPassword && !errors.value.email && !errors.value.phone) {
+    try {
+      // Create user with Firebase Auth
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        formData.value.email,
+        formData.value.password
+      )
+      const user = userCredential.user
+
+      // Store user details in Firestore
+      await setDoc(doc(db, 'users', user.uid), {
+        username: formData.value.username,
+        email: formData.value.email,
+        isAustralian: formData.value.isAustralian,
+        phone: formData.value.phone,
+        gender: formData.value.gender,
+        role: 'user'
+      })
+
+      alert('Registration successful!')
+      clearForm()
+      router.push('/') 
+    } catch (error) {
+      console.error('Error registering user:', error.message)
+      // Handle Firebase errors
+      if (error.code === 'auth/email-already-in-use') {
+        errors.value.email = 'Email is already registered.'
+      } else {
+        alert('An error occurred: ' + error.message)
+      }
+    }
+  }
+}
+
+// clear the form
+const clearForm = () => {
+  formData.value = {
+    email: '',
+    username: '',
+    password: '',
+    confirmPassword: '',
+    isAustralian: false,
+    phone: '',
+    gender: ''
+  }
 }
 
 // store submitted form data
@@ -93,29 +152,6 @@ const validateForm = () => {
     errors.value.phone = 'Please enter a valid Australian phone number.'
   } else {
     errors.value.phone = null
-  }
-}
-
-// Submit form
-const submitForm = () => {
-  validateForm()
-  if (!errors.value.username && !errors.value.password && !errors.value.confirmPassword && !errors.value.email && !errors.value.phone) {
-    submittedCards.value.push({ ...formData.value })
-    clearForm()
-    alert('Form submitted successfully!')
-  }
-}
-
-// clear the form
-const clearForm = () => {
-  formData.value = {
-    username: '',
-    password: '',
-    confirmPassword: '',
-    isAustralian: false,
-    email: '',
-    phone: '',
-    gender: ''
   }
 }
 </script>

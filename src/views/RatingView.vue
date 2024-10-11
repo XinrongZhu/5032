@@ -69,7 +69,6 @@
  */
 
 import { ref, computed } from 'vue'
-import { isAuthenticated } from '../router/authenticated'
 
 // Initialize reactive state for the current rating and reason (comment)
 const rating = ref(0)
