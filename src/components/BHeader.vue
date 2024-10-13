@@ -33,7 +33,7 @@ const logout = async () => {
           <router-link to="/register" class="nav-link" active-class="active">Register</router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/admindashboard" class="nav-link" active-class="active">Admindashboard</router-link>
+          <router-link to="/admindashboard" class="nav-link" active-class="active">AdminDashboard</router-link>
         </li>
         <li class="nav-item">
           <router-link to="/sendemail" class="nav-link" active-class="active">Send Email</router-link>
