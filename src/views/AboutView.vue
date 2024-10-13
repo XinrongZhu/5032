@@ -6,7 +6,7 @@
     </div>
 
     <div class="image-section mb-3">
-        <img src="@/assets/ass2.png" alt="Charity Health Platform" />
+      <img src="/ass2.png" alt="Charity Health Platform" />
     </div>
 
     <div class="content-section">
