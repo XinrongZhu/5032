@@ -4,7 +4,7 @@ import AboutView from '../views/AboutView.vue'
 import LoginView from '../views/LoginView.vue'
 import RatingView from '../views/RatingView.vue'
 import Admindashboard from '../views/Admindashboard.vue'
-import EmailView from '../views/EmailView.vue'
+import SendEmail from '../views/SendEmail.vue'
 import { getAuth } from 'firebase/auth';
 
 // Define application routes
@@ -25,6 +25,11 @@ const routes = [
     component: Admindashboard,
   },
   {
+    path: '/sendemail',
+    name: 'SendEmail',
+    component: SendEmail,
+  },
+  {
     path: '/about',
     name: 'About',
     component: AboutView,
@@ -33,12 +38,6 @@ const routes = [
     path: '/rating',
     name: 'Rating',
     component: RatingView,
-  },
-  ,
-  {
-    path: '/email',
-    name: 'Email',
-    component: EmailView,
   }
 ];
 

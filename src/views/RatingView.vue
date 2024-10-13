@@ -33,12 +33,11 @@
       <!-- Submit button -->
       <button 
         class="btn btn-primary mt-3" 
-        :disabled="!canSubmit || !isAuthenticated" 
+        :disabled="!canSubmit "
         @click="submitRating"
       >
         Submit
       </button>
-      <p v-if="!isAuthenticated" class="text-danger mt-2">You must be logged in to submit a rating.</p>
       
     </div>
 
@@ -102,7 +101,7 @@ const setRating = (value) => {
 
 // submit the current rating and reason as a new review
 const submitRating = () => {
-  if (rating.value && reason.value.length >= 10 && isAuthenticated.value) {
+  if (rating.value && reason.value.length >= 10) {
     reviews.value.push({ rating: rating.value, comment: reason.value })
     rating.value = 0
     reason.value = ''

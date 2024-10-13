@@ -1,17 +1,23 @@
+<script setup>
 import { getAuth, signOut } from 'firebase/auth';
 import { useRouter } from 'vue-router';
 
+// Firebase Authentication
 const auth = getAuth();
 const router = useRouter();
 
+// Logout function
 const logout = async () => {
   try {
+    // Firebase sign-out method
     await signOut(auth);
+    // Redirect to login page after sign-out
     router.push('/');
   } catch (error) {
     console.error('Error signing out:', error);
   }
 };
+</script>
 
 <template>
   <!-- Navigation Header -->
@@ -26,8 +32,11 @@ const logout = async () => {
         <li class="nav-item">
           <router-link to="/register" class="nav-link" active-class="active">Register</router-link>
         </li>
-         <li class="nav-item">
+        <li class="nav-item">
           <router-link to="/admindashboard" class="nav-link" active-class="active">Admindashboard</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/sendemail" class="nav-link" active-class="active">Send Email</router-link>
         </li>
         <li class="nav-item">
           <router-link to="/about" class="nav-link" active-class="active">About</router-link>
@@ -36,11 +45,9 @@ const logout = async () => {
           <router-link to="/rating" class="nav-link" active-class="active">Rating</router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/email" class="nav-link" active-class="active">Email</router-link>
-        </li>
-        <li class="nav-item">
           <button class="nav-link" active-class="active" @click="logout">Logout</button>
         </li>
+        
       </ul>
     </header>
   </div>

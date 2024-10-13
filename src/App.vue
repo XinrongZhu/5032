@@ -1,5 +1,6 @@
 <script setup>
 import BHeader from './components/BHeader.vue'
+import HomeMap from './components/HomeMap.vue'
 </script>
 
 <template>

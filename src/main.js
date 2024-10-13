@@ -1,4 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+import InputText from 'primevue/inputtext';
 
 import { createApp } from 'vue'
 import App from './App.vue'
@@ -8,7 +11,6 @@ import PrimeVue from 'primevue/config'
 import Aura from '@primevue/themes/aura'
 
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAqPNS-XEikKMUTDtYY5yvF6pb2SceeKt8",
@@ -23,6 +25,10 @@ initializeApp(firebaseConfig);
 
 const app = createApp(App)
 app.use(PrimeVue, { theme: { preset: Aura } })
+app.component('DataTable', DataTable);
+app.component('Column', Column);
+app.component('InputText', InputText);
 app.use(router)
 
 app.mount('#app')
+

@@ -1,0 +1,12 @@
+specVersion: "v1beta"
+serviceId: "Ass2"
+location: "australia-southeast1"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "fdcdb"
+      cloudSql:
+        instanceId: "Ass2-fdc"
+      # schemaValidation: "COMPATIBLE"
+connectorDirs: ["./connector"]
