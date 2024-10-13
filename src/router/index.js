@@ -3,7 +3,7 @@ import RegisterView from '../views/RegisterView.vue'
 import AboutView from '../views/AboutView.vue'
 import LoginView from '../views/LoginView.vue'
 import RatingView from '../views/RatingView.vue'
-import AdminDashboard from '../views/Admindashboard.vue';
+import AdminDashboard from '../views/AdminDashboard.vue';
 import SendEmail from '../views/SendEmail.vue'
 import { getAuth } from 'firebase/auth';
 
@@ -22,7 +22,7 @@ const routes = [
   {
     path: '/admindashboard',
     name: 'AdminDashboard',
-    component: AdminDashboard,
+    component: AdminDashboard
   },
   {
     path: '/sendemail',
